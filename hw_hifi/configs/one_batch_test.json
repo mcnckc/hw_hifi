@@ -27,6 +27,7 @@
           "type": "LJspeechDataset",
           "args": {
             "part": "train",
+            "data_dir": "/kaggle/input/the-lj-speech-dataset/LJSpeech-1.1",
             "max_audio_length": 20.0,
             "max_text_length": 200,
             "limit": 10
@@ -42,6 +43,7 @@
           "type": "LJspeechDataset",
           "args": {
             "part": "test",
+            "data_dir": "/kaggle/input/the-lj-speech-dataset/LJSpeech-1.1",
             "max_audio_length": 20.0,
             "max_text_length": 200,
             "limit": 10

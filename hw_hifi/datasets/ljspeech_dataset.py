@@ -25,7 +25,7 @@ class LJspeechDataset(BaseDataset):
             data_dir.mkdir(exist_ok=True, parents=True)
         if splits_dir is None:
             if kaggle:
-                splits_dir = ''
+                splits_dir = '/kaggle/working/ljspeech'
             else:
                 splits_dir = data_dir
         self.kaggle = kaggle
@@ -50,7 +50,7 @@ class LJspeechDataset(BaseDataset):
 
 
     def _get_or_load_index(self, part):
-        index_path = self._data_dir / f"{part}_index.json"
+        index_path = self._splits_dir / f"{part}_index.json"
         if index_path.exists():
             with index_path.open() as f:
                 index = json.load(f)
@@ -62,7 +62,7 @@ class LJspeechDataset(BaseDataset):
 
     def _create_index(self, part):
         index = []
-        split_dir = self._data_dir / part
+        split_dir = self._splits_dir / part
         if not split_dir.exists():
             self._load_dataset()
 
@@ -75,7 +75,7 @@ class LJspeechDataset(BaseDataset):
                 list(wav_dirs), desc=f"Preparing ljspeech folders: {part}"
         ):
             wav_dir = Path(wav_dir)
-            trans_path = list(self._data_dir.glob("*.csv"))[0]
+            trans_path = list(self._splits_dir.glob("*.csv"))[0]
             with trans_path.open() as f:
                 for line in f:
                     w_id = line.split('|')[0]
