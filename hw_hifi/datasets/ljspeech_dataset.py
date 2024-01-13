@@ -22,9 +22,11 @@ class LJspeechDataset(BaseDataset):
         if data_dir is None:
             data_dir = ROOT_PATH / "data" / "datasets" / "ljspeech"
             data_dir.mkdir(exist_ok=True, parents=True)
+        elif data_dir is str:
+            data_dir = Path(data_dir)
         if splits_dir is None:
             if kaggle:
-                splits_dir = '/kaggle/working/ljspeech'
+                splits_dir = Path('/kaggle/working/ljspeech')
             else:
                 splits_dir = data_dir
         self.kaggle = kaggle
