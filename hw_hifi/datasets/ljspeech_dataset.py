@@ -44,9 +44,9 @@ class LJspeechDataset(BaseDataset):
         (self._splits_dir / "test").mkdir(exist_ok=True, parents=True)
         for i, fpath in enumerate((self._data_dir / "wavs").iterdir()):
             if i < train_length:
-                shutil.move(str(fpath), str(self._splits_dir / "train" / fpath.name))
+                shutil.copy(str(fpath), str(self._splits_dir / "train" / fpath.name))
             else:
-                shutil.move(str(fpath), str(self._splits_dir / "test" / fpath.name))
+                shutil.copy(str(fpath), str(self._splits_dir / "test" / fpath.name))
         #shutil.rmtree(str(self._data_dir / "wavs"))
 
 
