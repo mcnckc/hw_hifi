@@ -112,6 +112,7 @@ class GanTrainer(BaseTrainer):
                 else:
                     raise e
             self.train_metrics.update("grad norm", self.get_grad_norm())
+            print("Remainder:", batch_idx % self.log_step, self.log_step)
             if batch_idx % self.log_step == 0:
                 print("hereBatch", batch_idx)
                 self.writer.set_step((epoch - 1) * self.len_epoch + batch_idx)
