@@ -71,6 +71,10 @@
   "loss": {
   },
   "metrics": [
+    "mel loss",
+    "feature loss",
+    "generation loss",
+    "total generator loss"
   ],
   "lr_scheduler_g": {
     "type": "ExponentialLR",
