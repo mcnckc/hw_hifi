@@ -25,10 +25,11 @@ class HiFiGAN(BaseModel):
         self.generator_loss = GeneratorLoss()
 
     def generator_params(self):
-        return self.generator.parameters()
+        return filter(lambda p: p.requires_grad, self.generator.parameters())
     
     def discriminator_params(self):
-        return itertools.chain(self.mp_discriminator.parameters(), self.ms_discriminator.parameters())
+        return list(filter(lambda p: p.requires_grad, self.mp_discriminator.parameters())) + \
+                list(filter(lambda p: p.requires_grad, self.ms_discriminator.parameters()))
     
     def forward(self, **batch) -> Tensor | dict:
         true = batch['audio_wave'].unsqueeze(dim=1)
