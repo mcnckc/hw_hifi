@@ -92,10 +92,8 @@ class GanTrainer(BaseTrainer):
         for batch_idx, batch in enumerate(
                 tqdm(self.train_dataloader, desc='Train epoch', total=self.len_epoch)
         ):
-            print("Batch", batch_idx)
             if batch_idx >= self.len_epoch:
                 break
-            print("At least here")
             try:
                 batch = self.process_batch(
                     batch,
@@ -103,7 +101,7 @@ class GanTrainer(BaseTrainer):
                     metrics=self.train_metrics,
                 )
             except RuntimeError as e:
-                print("EXCEPTED")
+                print("OOM")
                 if "out of memory" in str(e) and self.skip_oom:
                     self.logger.warning("OOM on batch. Skipping batch.")
                     for p in self.model.parameters():
@@ -114,9 +112,7 @@ class GanTrainer(BaseTrainer):
                 else:
                     raise e
             self.train_metrics.update("grad norm", self.get_grad_norm())
-            print("Remainder:", batch_idx % self.log_step, self.log_step)
             if batch_idx % self.log_step == 0:
-                print("hereBatch", batch_idx)
                 self.writer.set_step((epoch - 1) * self.len_epoch + batch_idx)
                 """
                 self.logger.debug(
