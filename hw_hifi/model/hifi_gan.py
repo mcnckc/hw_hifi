@@ -41,10 +41,10 @@ class HiFiGAN(BaseModel):
         
         print("FAKE SHAPE:", fake.shape, "TRUE SHAPE:", true.shape)
         fake_spec = self.mel(fake)
-        #true_out_mp, fake_out_mp, _, _ = self.mp_discriminator(true, fake.detach())
-        #true_out_ms, fake_out_ms, _, _ = self.ms_discriminator(true, fake.detach())
+        true_out_mp, fake_out_mp, _, _ = self.mp_discriminator(true, fake.detach())
+        true_out_ms, fake_out_ms, _, _ = self.ms_discriminator(true, fake.detach())
 
-        #d_loss = self.discr_loss(true_out_mp, fake_out_mp) + self.discr_loss(true_out_ms, fake_out_ms)
+        d_loss = self.discr_loss(true_out_mp, fake_out_mp) + self.discr_loss(true_out_ms, fake_out_ms)
 
         loss_mel = F.l1_loss(batch['spectrogram'], fake_spec) * 45
 
@@ -56,7 +56,7 @@ class HiFiGAN(BaseModel):
         total_gen_loss = loss_mel + loss_feature + loss_gen
 
         return {'audio_wave': fake, 
-                'd_loss': 0, 
+                'd_loss': d_loss, 
                 'mel_loss': loss_mel,
                 'feature_loss': loss_feature,
                 'gen_loss': loss_gen,
