@@ -32,11 +32,11 @@ class HiFiGAN(BaseModel):
     
     def forward(self, **batch) -> Tensor | dict:
         true = batch['audio_wave'].unsqueeze(dim=1)
-        raw_fake = self.generator(batch['spectrogram'])
-        if raw_fake.shape[-1] >= true.shape[-1]:
-            fake = raw_fake[..., :true.shape[-1]].clone()
-        else:
-            print("Prediction is shorter")
+        fake = self.generator(batch['spectrogram'])[..., :true.shape[-1]]
+        #if raw_fake.shape[-1] >= true.shape[-1]:
+            #fake = raw_fake[..., :true.shape[-1]].clone()
+        #else:
+            #print("Prediction is shorter")
         
         print("FAKE SHAPE:", fake.shape, "TRUE SHAPE:", true.shape)
         fake_spec = self.mel(fake)
