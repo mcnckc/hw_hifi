@@ -68,8 +68,8 @@ def main(config):
         lr_scheduler_d=lr_scheduler_d,
         len_epoch=config["trainer"].get("len_epoch", None)
     )
-
-    trainer.train()
+    with torch.autograd.set_detect_anomaly(True):
+        trainer.train()
 
 
 if __name__ == "__main__":
