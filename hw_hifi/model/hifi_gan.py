@@ -31,9 +31,14 @@ class HiFiGAN(BaseModel):
         return itertools.chain(self.mp_discriminator.parameters(), self.ms_discriminator.parameters())
     
     def forward(self, **batch) -> Tensor | dict:
-        fake = self.generator(batch['spectrogram'])
-        fake_spec = self.mel(fake)
         true = batch['audio_wave'].unsqueeze(dim=1)
+        fake = self.generator(batch['spectrogram'])
+        if fake.shape[-1] > true.shape[-1]:
+            fake = fake[..., true.shape[-1]]
+        elif fake.shape[-1] < true.shape[-1]:
+            print("Prediction is shorter")
+        
+        fake_spec = self.mel(fake)
         true_out_mp, fake_out_mp, _, _ = self.mp_discriminator(true, fake.detach())
         true_out_ms, fake_out_ms, _, _ = self.ms_discriminator(true, fake.detach())
 
