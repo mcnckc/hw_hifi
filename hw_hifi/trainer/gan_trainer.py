@@ -128,7 +128,10 @@ class GanTrainer(BaseTrainer):
                 )
                 """
                 self.writer.add_scalar(
-                    "learning rate", self.optimizer.param_groups[0]['lr']
+                    "discriminator learning rate", self.optimizer_d.param_groups[0]['lr']
+                )
+                self.writer.add_scalar(
+                    "generator learning rate", self.optimizer_g.param_groups[0]['lr']
                 )
                 #self._log_predictions(**batch)
                 #self._log_spectrogram(batch["spectrogram"])
