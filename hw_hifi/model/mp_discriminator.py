@@ -24,11 +24,11 @@ class PDiscriminator(nn.Module):
 
     def reshape_audio(self, x):
         B, C, T = x.shape
-        if T % self.period != 0:
-            n_pad = self.period - (T % self.period)
+        if T % self.p != 0:
+            n_pad = self.p - (T % self.p)
             x = F.pad(x, (0, n_pad), "reflect")
             T = T + n_pad
-        return x.view(B, C, T // self.period, self.period)
+        return x.view(B, C, T // self.p, self.p)
     
     def forward(self, x):
         x = self.reshape_audio(x)
