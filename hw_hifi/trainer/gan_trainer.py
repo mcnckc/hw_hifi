@@ -58,13 +58,13 @@ class GanTrainer(BaseTrainer):
         self.log_step = 50
 
         self.train_metrics = MetricTracker(
-            "loss", "grad norm", "mel loss",
+            "loss", "grad norm", "discriminator loss", "mel loss",
             "feature loss",
             "generation loss",
             "total generator loss", *[m.name for m in self.metrics], writer=self.writer
         )
         self.evaluation_metrics = MetricTracker(
-            "loss", "mel loss",
+            "loss", "discriminator loss", "mel loss",
             "feature loss",
             "generation loss",
             "total generator loss", *[m.name for m in self.metrics], writer=self.writer
@@ -154,23 +154,39 @@ class GanTrainer(BaseTrainer):
         if is_train:
             self.optimizer_g.zero_grad()
             self.optimizer_d.zero_grad()
-        outputs = self.model(**batch)
-        if type(outputs) is dict:
-            batch.update(outputs)
-        else:
-            batch["logits"] = outputs
+
+        true = batch['audio_wave'].unsqueeze(dim=1)
+        fake = self.model.generator(batch['spectrogram'])[..., :true.shape[-1]]
+        fake_spec = self.model.mel(fake)
+        true_out_mp, fake_out_mp, _, _ = self.model.mp_discriminator(true, fake.detach())
+        true_out_ms, fake_out_ms, _, _ = self.model.ms_discriminator(true, fake.detach())
+
+        d_loss = self.model.discr_loss(true_out_mp, fake_out_mp) + self.model.discr_loss(true_out_ms, fake_out_ms)
+        if is_train:
+            d_loss.backward()
+            self.optimizer_d.step()
+        
+        loss_mel = F.l1_loss(batch['spectrogram'], fake_spec) * 45
+
+        true_out_mp, fake_out_mp, true_fs_mp, fake_fs_mp = self.model.mp_discriminator(true, fake)
+        true_out_ms, fake_out_ms, true_fs_ms, fake_fs_ms = self.model.ms_discriminator(true, fake)
+
+        loss_feature = self.model.feature_loss(true_fs_mp, fake_fs_mp) + self.model.feature_loss(true_fs_ms, fake_fs_ms)
+        loss_gen = self.model.generator_loss(fake_out_mp) + self.model.generator_loss(fake_out_ms)
+        total_gen_loss = loss_mel + loss_feature + loss_gen
 
         if is_train:
-            self.optimizer_d.zero_grad()
-            batch["d_loss"].backward()
-            self._clip_grad_norm()
-            self.optimizer_d.step()
-
-            self.optimizer_g.zero_grad()
-            batch['total_gen_loss'].backward()
-            self._clip_grad_norm()
+            total_gen_loss.backward()
             self.optimizer_g.step()
 
+        batch.update({'audio_wave': fake, 
+                'd_loss': d_loss, 
+                'mel_loss': loss_mel,
+                'feature_loss': loss_feature,
+                'gen_loss': loss_gen,
+                'total_gen_loss': total_gen_loss})
+
+        if is_train:
             if self.lr_scheduler_g is not None:
                 if isinstance(self.lr_scheduler_g, ReduceLROnPlateau):
                     self.lr_scheduler_g.step(batch['loss'].item())
@@ -183,7 +199,7 @@ class GanTrainer(BaseTrainer):
                 else:
                     self.lr_scheduler_d.step()
 
-        #metrics.update("discriminator loss", batch["d_loss"].item())
+        metrics.update("discriminator loss", batch["d_loss"].item())
         metrics.update("mel loss", batch["mel_loss"].item())
         metrics.update("feature loss", batch["feature_loss"].item())
         metrics.update("generation loss", batch["gen_loss"].item())

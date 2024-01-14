@@ -32,35 +32,7 @@ class HiFiGAN(BaseModel):
                 list(filter(lambda p: p.requires_grad, self.ms_discriminator.parameters()))
     
     def forward(self, **batch) -> Tensor | dict:
-        true = batch['audio_wave'].unsqueeze(dim=1)
-        fake = self.generator(batch['spectrogram'])[..., :true.shape[-1]]
-        #if raw_fake.shape[-1] >= true.shape[-1]:
-            #fake = raw_fake[..., :true.shape[-1]].clone()
-        #else:
-            #print("Prediction is shorter")
-        
-        print("FAKE SHAPE:", fake.shape, "TRUE SHAPE:", true.shape)
-        fake_spec = self.mel(fake)
-        true_out_mp, fake_out_mp, _, _ = self.mp_discriminator(true, fake.detach())
-        true_out_ms, fake_out_ms, _, _ = self.ms_discriminator(true, fake.detach())
-
-        d_loss = self.discr_loss(true_out_mp, fake_out_mp) + self.discr_loss(true_out_ms, fake_out_ms)
-
-        loss_mel = F.l1_loss(batch['spectrogram'], fake_spec) * 45
-
-        true_out_mp, fake_out_mp, true_fs_mp, fake_fs_mp = self.mp_discriminator(true, fake)
-        true_out_ms, fake_out_ms, true_fs_ms, fake_fs_ms = self.ms_discriminator(true, fake)
-
-        loss_feature = self.feature_loss(true_fs_mp, fake_fs_mp) + self.feature_loss(true_fs_ms, fake_fs_ms)
-        loss_gen = self.generator_loss(fake_out_mp) + self.generator_loss(fake_out_ms)
-        total_gen_loss = loss_mel + loss_feature + loss_gen
-
-        return {'audio_wave': fake, 
-                'd_loss': d_loss, 
-                'mel_loss': loss_mel,
-                'feature_loss': loss_feature,
-                'gen_loss': loss_gen,
-                'total_gen_loss': total_gen_loss}
+        return batch
 
 
 
