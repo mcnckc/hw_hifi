@@ -152,10 +152,10 @@ class GanTrainer(BaseTrainer):
             batch["logits"] = outputs
 
         if is_train:
-            self.optimizer_d.zero_grad()
-            batch["d_loss"].backward()
-            self._clip_grad_norm()
-            self.optimizer_d.step()
+            #self.optimizer_d.zero_grad()
+            #batch["d_loss"].backward()
+            #self._clip_grad_norm()
+            #self.optimizer_d.step()
 
             self.optimizer_g.zero_grad()
             batch['total_gen_loss'].backward()
