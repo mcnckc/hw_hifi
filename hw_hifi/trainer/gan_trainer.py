@@ -36,10 +36,8 @@ class GanTrainer(BaseTrainer):
             len_epoch=None,
             skip_oom=True,
     ):
-        super().__init__(model, None, metrics, None, config, device)
+        super().__init__(model, None, metrics, optimizer_g, optimizer_d, config, device)
         self.skip_oom = skip_oom
-        self.optimizer_g = optimizer_g
-        self.optimizer_d = optimizer_d
         self.config = config
         self.train_dataloader = dataloaders["train"]
         if len_epoch is None:

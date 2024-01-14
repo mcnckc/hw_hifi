@@ -12,7 +12,7 @@ class BaseTrainer:
     Base class for all trainers
     """
 
-    def __init__(self, model: BaseModel, criterion, metrics, optimizer, config, device):
+    def __init__(self, model: BaseModel, criterion, metrics, optimizer_g, optimizer_d, config, device):
         self.device = device
         self.config = config
         self.logger = config.get_logger("trainer", config["trainer"]["verbosity"])
@@ -20,8 +20,8 @@ class BaseTrainer:
         self.model = model
         self.criterion = criterion
         self.metrics = metrics
-        self.optimizer = optimizer
-
+        self.optimizer_g = optimizer_g
+        self.optimizer_d = optimizer_d
         # for interrupt saving
         self._last_epoch = 0
 
@@ -141,7 +141,8 @@ class BaseTrainer:
             "arch": arch,
             "epoch": epoch,
             "state_dict": self.model.state_dict(),
-            "optimizer": self.optimizer.state_dict(),
+            "optimizer_g": self.optimizer_g.state_dict(),
+            "optimizer_d": self.optimizer_d.state_dict(),
             "monitor_best": self.mnt_best,
             "config": self.config,
         }
