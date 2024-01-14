@@ -2,7 +2,7 @@
   "name": "one_batch_test",
   "n_gpu": 1,
   "preprocessing": {
-    "sr": 16000
+    "sr": 22050
   },
   "augmentations": {
     "wave": [],

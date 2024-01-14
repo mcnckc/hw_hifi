@@ -63,6 +63,7 @@ class BaseDataset(Dataset):
         audio_tensor = audio_tensor[0:1, :]  # remove all channels but the first
         target_sr = self.config_parser["preprocessing"]["sr"]
         if sr != target_sr:
+            print("Sample rate mismatch!")
             audio_tensor = torchaudio.functional.resample(audio_tensor, sr, target_sr)
         return audio_tensor
 
