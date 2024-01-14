@@ -92,6 +92,7 @@ class GanTrainer(BaseTrainer):
         for batch_idx, batch in enumerate(
                 tqdm(self.train_dataloader, desc='Train epoch', total=self.len_epoch)
         ):
+            print("Batch", batch_idx)
             if batch_idx >= self.len_epoch:
                 break
             try:
@@ -112,6 +113,7 @@ class GanTrainer(BaseTrainer):
                     raise e
             self.train_metrics.update("grad norm", self.get_grad_norm())
             if batch_idx % self.log_step == 0:
+                print("hereBatch", batch_idx)
                 self.writer.set_step((epoch - 1) * self.len_epoch + batch_idx)
                 """
                 self.logger.debug(
