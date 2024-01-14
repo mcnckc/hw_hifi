@@ -38,6 +38,7 @@ class HiFiGAN(BaseModel):
         elif fake.shape[-1] < true.shape[-1]:
             print("Prediction is shorter")
         
+        print("FAKE SHAPE:", fake.shape, "TRUE SHAPE:", true.shape)
         fake_spec = self.mel(fake)
         true_out_mp, fake_out_mp, _, _ = self.mp_discriminator(true, fake.detach())
         true_out_ms, fake_out_ms, _, _ = self.ms_discriminator(true, fake.detach())
