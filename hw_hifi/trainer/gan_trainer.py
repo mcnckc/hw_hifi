@@ -58,10 +58,16 @@ class GanTrainer(BaseTrainer):
         self.log_step = 50
 
         self.train_metrics = MetricTracker(
-            "loss", "grad norm", *[m.name for m in self.metrics], writer=self.writer
+            "loss", "grad norm", "mel loss",
+            "feature loss",
+            "generation loss",
+            "total generator loss", *[m.name for m in self.metrics], writer=self.writer
         )
         self.evaluation_metrics = MetricTracker(
-            "loss", *[m.name for m in self.metrics], writer=self.writer
+            "loss", "mel loss",
+            "feature loss",
+            "generation loss",
+            "total generator loss", *[m.name for m in self.metrics], writer=self.writer
         )
 
     @staticmethod
