@@ -95,6 +95,7 @@ class GanTrainer(BaseTrainer):
             print("Batch", batch_idx)
             if batch_idx >= self.len_epoch:
                 break
+            print("At least here")
             try:
                 batch = self.process_batch(
                     batch,
@@ -102,6 +103,7 @@ class GanTrainer(BaseTrainer):
                     metrics=self.train_metrics,
                 )
             except RuntimeError as e:
+                print("EXCEPTED")
                 if "out of memory" in str(e) and self.skip_oom:
                     self.logger.warning("OOM on batch. Skipping batch.")
                     for p in self.model.parameters():
