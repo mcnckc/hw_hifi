@@ -45,6 +45,7 @@ class MPDiscriminator(nn.Module):
             PDiscriminator(p) for p in [2, 3, 5, 7, 11]
         ])
     def forward(self, true, fake):
+        print("wave shapes:", true.shape, fake.shape)
         true_out, fake_out, true_fs, fake_fs = [], [], [], []
         for d in self.discriminators:
             out, fs = d(true)
