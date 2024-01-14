@@ -34,7 +34,7 @@ class HiFiGAN(BaseModel):
         true = batch['audio_wave'].unsqueeze(dim=1)
         raw_fake = self.generator(batch['spectrogram'])
         if raw_fake.shape[-1] >= true.shape[-1]:
-            fake = raw_fake[..., :true.shape[-1]]
+            fake = raw_fake[..., :true.shape[-1]].clone()
         else:
             print("Prediction is shorter")
         
