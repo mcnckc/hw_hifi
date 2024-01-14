@@ -76,7 +76,7 @@ class LJspeechDataset(BaseDataset):
                 list(wav_dirs), desc=f"Preparing ljspeech folders: {part}"
         ):
             wav_dir = Path(wav_dir)
-            trans_path = list(self._splits_dir.glob("*.csv"))[0]
+            trans_path = list(self._data_dir.glob("*.csv"))[0]
             with trans_path.open() as f:
                 for line in f:
                     w_id = line.split('|')[0]
