@@ -174,7 +174,7 @@ class GanTrainer(BaseTrainer):
                 else:
                     self.lr_scheduler_d.step()
 
-        metrics.update("discriminator loss", batch["d_loss"].item())
+        #metrics.update("discriminator loss", batch["d_loss"].item())
         metrics.update("mel loss", batch["mel_loss"].item())
         metrics.update("feature loss", batch["feature_loss"].item())
         metrics.update("generation loss", batch["gen_loss"].item())
