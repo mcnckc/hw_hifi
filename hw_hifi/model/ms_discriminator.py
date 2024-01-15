@@ -7,6 +7,7 @@ class SDiscriminator(nn.Module):
     def __init__(self, use_spectral_norm=False, *args, **kwargs, ) -> None:
         super().__init__(*args, **kwargs)
         norm_f = weight_norm if use_spectral_norm == False else spectral_norm
+        [128, 128, 256, 512, 1024, 1024, 1024]
         channels = [1, 128, 128, 256, 512, 1024, 1024, 1024, 1]
         kss = [15] + [41] * 5 + [5, 3]
         strides = [1, 2, 2, 4, 4, 1, 1, 1]
@@ -22,7 +23,7 @@ class SDiscriminator(nn.Module):
                 ))
             else:
                 self.layers.append(nn.Sequential(
-                    norm_f(nn.Conv1d(channels[i], channels[i + 1], kss[i], strides[i], groups=groups[i], padding=padding[i]))
+                    norm_f(nn.Conv1d(channels[i], channels[i + 1], kss[i], strides[i], groups=groups[i], padding='same'))
                 ))
     def forward(self, x):
         features = []
