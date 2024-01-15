@@ -20,6 +20,7 @@ class GeneratorConfig:
         self.upsample_initial_channel = init_channels
         self.resblock_kernel_sizes = res_kernels
         self.resblock_dilation_sizes = res_dilations
+        self.reblock = '1'
 
 class TrueHiFiGAN(BaseModel):
     def __init__(self, init_channels, kernel_sizes, strides, res_kernels, res_dilations, **batch):
