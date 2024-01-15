@@ -29,6 +29,7 @@
             "part": "train",
             "data_dir": "/kaggle/input/the-lj-speech-dataset/LJSpeech-1.1",
             "kaggle": "True",
+            "segment_length": 20000,
             "max_audio_length": 20.0,
             "max_text_length": 200,
             "limit": 10

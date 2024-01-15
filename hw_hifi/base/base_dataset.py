@@ -23,12 +23,14 @@ class BaseDataset(Dataset):
             wave_augs=None,
             spec_augs=None,
             limit=None,
+            segment_length=None,
             max_audio_length=None,
             max_text_length=None,
     ):
         self.config_parser = config_parser
         self.wave_augs = wave_augs
         self.spec_augs = spec_augs
+        self.segment_length = segment_length
         #self.log_spec = config_parser["preprocessing"]["log_spec"]
 
         self._assert_index_is_valid(index)
@@ -42,12 +44,16 @@ class BaseDataset(Dataset):
         data_dict = self._index[ind]
         audio_path = data_dict["path"]
         audio_wave = self.load_audio(audio_path)
-        audio_wave, audio_spec = self.process_wave(audio_wave)
+        if audio_wave.shape[-1] > self.segment_length:
+            start = np.random.randint(audio_wave.shape[-1] - self.segment_length + 1)
+            segment = audio_wave[..., start:start + self.segment_length]
+        else:
+            segment = audio_wave
+        segment, audio_spec = self.process_wave(segment)
         return {
             "audio": audio_wave,
             "spectrogram": audio_spec,
             "duration": audio_wave.size(1) / self.config_parser["preprocessing"]["sr"],
-            "text": data_dict["text"],
             "audio_path": audio_path,
         }
 
