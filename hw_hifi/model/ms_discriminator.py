@@ -11,7 +11,7 @@ class SDiscriminator(nn.Module):
         channels = [1, 128, 128, 256, 512, 1024, 1024, 1024, 1]
         kss = [15] + [41] * 5 + [5, 3]
         strides = [1, 2, 2, 4, 4, 1, 1, 1]
-        groups = [1, 4] + [16] * 4 + [1, 1]
+        groups = [1, 4] + [16] * 4 + [2, 1]
         padding = [7] + [20] * 5 + [2, 1]
         n_layers = len(channels) - 1
         self.layers = nn.ModuleList()
