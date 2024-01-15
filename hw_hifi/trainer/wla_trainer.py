@@ -115,7 +115,9 @@ class Trainer(BaseTrainer):
     @staticmethod
     def move_batch_to_device(batch, device: torch.device):
         for tensor_name in ["waves"]:
+            print("MOVING TO DEVICE...")
             if tensor_name in batch:
+                print("MOVED")
                 batch[tensor_name] = batch[tensor_name].to(device)
 
         return batch
