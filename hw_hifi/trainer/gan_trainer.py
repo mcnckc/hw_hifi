@@ -150,7 +150,6 @@ class GanTrainer(BaseTrainer):
     def process_batch(self, batch, is_train: bool, metrics: MetricTracker):
         batch = self.move_batch_to_device(batch, self.device)
         if is_train:
-            self.optimizer_g.zero_grad()
             self.optimizer_d.zero_grad()
 
         true = batch['audio_wave'].unsqueeze(dim=1)
@@ -163,6 +162,9 @@ class GanTrainer(BaseTrainer):
         if is_train:
             d_loss.backward()
             self.optimizer_d.step()
+        
+        if is_train:
+            self.optimizer_g.zero_grad()
         
         loss_mel = F.l1_loss(batch['spectrogram'], fake_spec) * 45
 

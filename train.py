@@ -9,6 +9,8 @@ import hw_hifi.loss as module_loss
 import hw_hifi.metric as module_metric
 import hw_hifi.model as module_arch
 from hw_hifi.trainer.gan_trainer import GanTrainer
+from hw_hifi.trainer.wla_trainer import Trainer
+
 from hw_hifi.utils import prepare_device
 from hw_hifi.utils.object_loading import get_dataloaders
 from hw_hifi.utils.parse_config import ConfigParser
@@ -56,7 +58,7 @@ def main(config):
     lr_scheduler_g = config.init_obj(config["lr_scheduler_g"], torch.optim.lr_scheduler, optimizer_g)
     lr_scheduler_d = config.init_obj(config["lr_scheduler_d"], torch.optim.lr_scheduler, optimizer_d)
 
-    trainer = GanTrainer(
+    trainer = Trainer(
         model,
         metrics,
         optimizer_g,
