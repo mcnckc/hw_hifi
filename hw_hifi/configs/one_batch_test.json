@@ -32,7 +32,7 @@
             "segment_length": 20000,
             "max_audio_length": 20.0,
             "max_text_length": 200,
-            "limit": 10
+            "limit": 16
           }
         }
       ]
@@ -50,7 +50,7 @@
             "segment_length": 20000,
             "max_audio_length": 20.0,
             "max_text_length": 200,
-            "limit": 10
+            "limit": 16
           }
         }
       ]
