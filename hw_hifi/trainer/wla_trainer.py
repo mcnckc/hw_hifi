@@ -75,10 +75,8 @@ class Trainer(BaseTrainer):
             model,
             criterion,
             metrics=metrics,
-            optimizers=[
-                optimizer_generator,
-                optimizer_discriminator,
-            ],
+            optimizer_g=optimizer_generator,
+            optimizer_d=optimizer_discriminator,
             config=config,
             device=device,
             lr_schedulers=[
@@ -114,7 +112,7 @@ class Trainer(BaseTrainer):
 
     @staticmethod
     def move_batch_to_device(batch, device: torch.device):
-        for tensor_name in ["waves"]:
+        for tensor_name in ["audio_wave"]:
             print("MOVING TO DEVICE...")
             if tensor_name in batch:
                 print("MOVED")
