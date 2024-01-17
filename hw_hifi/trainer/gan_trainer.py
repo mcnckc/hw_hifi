@@ -155,7 +155,7 @@ class GanTrainer(BaseTrainer):
         true = batch['audio_wave'].unsqueeze(dim=1)
         fake = self.model.generator(batch['spectrogram'])[..., :true.shape[-1]]
         fake_spec = self.model.mel(fake)
-        """
+        
         true_out_mp, fake_out_mp, _, _ = self.model.mp_discriminator(true, fake.detach())
         true_out_ms, fake_out_ms, _, _ = self.model.ms_discriminator(true, fake.detach())
 
@@ -179,6 +179,7 @@ class GanTrainer(BaseTrainer):
         if is_train:
             total_gen_loss.backward()
             self.optimizer_g.step()
+        
 
         batch.update({'audio_wave': fake, 
                 'd_loss': 0, 
@@ -186,7 +187,10 @@ class GanTrainer(BaseTrainer):
                 'feature_loss': loss_feature * 2,
                 'gen_loss': loss_gen,
                 'total_gen_loss': total_gen_loss})
-
+        """
+        batch.update({'audio_wave': fake, 
+                'd_loss': d_loss})
+        
         if is_train:
             if self.lr_scheduler_g is not None:
                 if isinstance(self.lr_scheduler_g, ReduceLROnPlateau):
@@ -200,11 +204,11 @@ class GanTrainer(BaseTrainer):
                 else:
                     self.lr_scheduler_d.step()
 
-        #metrics.update("discriminator loss", batch["d_loss"].item())
-        metrics.update("mel loss", batch["mel_loss"].item())
-        metrics.update("feature loss", batch["feature_loss"].item())
-        metrics.update("adversarial loss", batch["gen_loss"].item())
-        metrics.update("total generator loss", batch["total_gen_loss"].item())
+        metrics.update("discriminator loss", batch["d_loss"].item())
+        #metrics.update("mel loss", batch["mel_loss"].item())
+        #metrics.update("feature loss", batch["feature_loss"].item())
+        #metrics.update("adversarial loss", batch["gen_loss"].item())
+        #metrics.update("total generator loss", batch["total_gen_loss"].item())
         for met in self.metrics:
             metrics.update(met.name, met(**batch))
         return batch
