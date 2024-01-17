@@ -181,8 +181,8 @@ class GanTrainer(BaseTrainer):
 
         batch.update({'audio_wave': fake, 
                 'd_loss': d_loss, 
-                'mel_loss': loss_mel,
-                'feature_loss': loss_feature,
+                'mel_loss': loss_mel * 45,
+                'feature_loss': loss_feature * 2,
                 'gen_loss': loss_gen,
                 'total_gen_loss': total_gen_loss})
 
