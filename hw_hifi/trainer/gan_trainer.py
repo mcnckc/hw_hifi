@@ -155,6 +155,7 @@ class GanTrainer(BaseTrainer):
         true = batch['audio_wave'].unsqueeze(dim=1)
         fake = self.model.generator(batch['spectrogram'])[..., :true.shape[-1]]
         fake_spec = self.model.mel(fake)
+        """
         true_out_mp, fake_out_mp, _, _ = self.model.mp_discriminator(true, fake.detach())
         true_out_ms, fake_out_ms, _, _ = self.model.ms_discriminator(true, fake.detach())
 
@@ -162,7 +163,7 @@ class GanTrainer(BaseTrainer):
         if is_train:
             d_loss.backward()
             self.optimizer_d.step()
-        
+        """
         if is_train:
             self.optimizer_g.zero_grad()
         
@@ -180,7 +181,7 @@ class GanTrainer(BaseTrainer):
             self.optimizer_g.step()
 
         batch.update({'audio_wave': fake, 
-                'd_loss': d_loss, 
+                'd_loss': 0, 
                 'mel_loss': loss_mel * 45,
                 'feature_loss': loss_feature * 2,
                 'gen_loss': loss_gen,
@@ -202,7 +203,7 @@ class GanTrainer(BaseTrainer):
         metrics.update("discriminator loss", batch["d_loss"].item())
         metrics.update("mel loss", batch["mel_loss"].item())
         metrics.update("feature loss", batch["feature_loss"].item())
-        metrics.update("generation loss", batch["gen_loss"].item())
+        metrics.update("adversarial loss", batch["gen_loss"].item())
         metrics.update("total generator loss", batch["total_gen_loss"].item())
         for met in self.metrics:
             metrics.update(met.name, met(**batch))
