@@ -166,14 +166,14 @@ class GanTrainer(BaseTrainer):
         if is_train:
             self.optimizer_g.zero_grad()
         
-        loss_mel = F.l1_loss(batch['spectrogram'], fake_spec) * 45
+        loss_mel = F.l1_loss(batch['spectrogram'], fake_spec)
 
         true_out_mp, fake_out_mp, true_fs_mp, fake_fs_mp = self.model.mp_discriminator(true, fake)
         true_out_ms, fake_out_ms, true_fs_ms, fake_fs_ms = self.model.ms_discriminator(true, fake)
 
         loss_feature = self.model.feature_loss(true_fs_mp, fake_fs_mp) + self.model.feature_loss(true_fs_ms, fake_fs_ms)
         loss_gen = self.model.generator_loss(fake_out_mp) + self.model.generator_loss(fake_out_ms)
-        total_gen_loss = loss_mel + loss_feature + loss_gen
+        total_gen_loss = loss_mel * 45 + loss_feature * 2 + loss_gen
 
         if is_train:
             total_gen_loss.backward()
