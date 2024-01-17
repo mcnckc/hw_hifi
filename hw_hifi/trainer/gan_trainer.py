@@ -58,13 +58,13 @@ class GanTrainer(BaseTrainer):
         self.train_metrics = MetricTracker(
             "loss", "grad norm", "discriminator loss", "mel loss",
             "feature loss",
-            "generation loss",
+            "adversarial loss",
             "total generator loss", *[m.name for m in self.metrics], writer=self.writer
         )
         self.evaluation_metrics = MetricTracker(
             "loss", "discriminator loss", "mel loss",
             "feature loss",
-            "generation loss",
+            "adversarial loss",
             "total generator loss", *[m.name for m in self.metrics], writer=self.writer
         )
 
