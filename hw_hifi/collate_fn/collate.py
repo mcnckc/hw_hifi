@@ -25,7 +25,6 @@ def collate_fn(dataset_items: List[dict]):
                                                (item['spectrogram'].squeeze()) for item in dataset_items])
     result_batch['audio_length'] = torch.tensor([item['audio'].shape[-1] for item in dataset_items])
     max_audio_len = result_batch['audio_length'].max()
-    print("Batch length:", max_audio_len)
     result_batch['audio_wave'] = torch.stack([nn.ConstantPad1d((0, max_audio_len - item['audio'].shape[-1]), 0)
                                                (item['audio'].squeeze()) for item in dataset_items])
     result_batch['audio_path'] = [item['audio_path'] for item in dataset_items]
