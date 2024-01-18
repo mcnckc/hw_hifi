@@ -53,7 +53,7 @@ class GanTrainer(BaseTrainer):
         self.evaluation_dataloaders = {k: v for k, v in dataloaders.items() if k != "train"}
         self.lr_scheduler_g = lr_scheduler_g
         self.lr_scheduler_d = lr_scheduler_d
-        self.log_step = 50
+        self.log_step = 10
 
         self.train_metrics = MetricTracker(
             "loss", "grad norm", "discriminator loss", "mel loss",
