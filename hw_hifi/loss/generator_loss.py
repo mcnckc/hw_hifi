@@ -9,6 +9,6 @@ class GeneratorLoss(nn.Module):
         loss = 0
         for out in disc_outs:
             loss += torch.mean((1 - out) ** 2)
-            print("S", torch.max(out), torch.min(out))
+            print("DISCR CUR LOSS", torch.max(out).item(), torch.min(out).item(), torch.median(out).item(), torch.mean(out).item())
         return loss
 
