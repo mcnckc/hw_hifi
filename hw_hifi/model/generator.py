@@ -48,7 +48,7 @@ class Generator(BaseModel):
                                                               ks, stride, padding=(ks - stride) // 2)),
                 MRF(channels // 2, res_kernels, res_dilations)
             ])
-            channels //= 2
+            channels //= 2 
         layers.extend([
                 nn.LeakyReLU(0.1),
                 weight_norm(nn.Conv1d(channels, 1, kernel_size=7, padding="same")),

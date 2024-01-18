@@ -155,7 +155,7 @@ class GanTrainer(BaseTrainer):
         true = batch['audio_wave'].unsqueeze(dim=1)
         fake = self.model.generator(batch['spectrogram'])[..., :true.shape[-1]]
         fake_spec = self.model.mel(fake)
-        
+        """
         true_out_mp, fake_out_mp, _, _ = self.model.mp_discriminator(true, fake.detach())
         true_out_ms, fake_out_ms, _, _ = self.model.ms_discriminator(true, fake.detach())
 
@@ -168,19 +168,19 @@ class GanTrainer(BaseTrainer):
             self.optimizer_g.zero_grad()
         
         loss_mel = F.l1_loss(batch['spectrogram'], fake_spec)
-
+        """"
         true_out_mp, fake_out_mp, true_fs_mp, fake_fs_mp = self.model.mp_discriminator(true, fake)
         true_out_ms, fake_out_ms, true_fs_ms, fake_fs_ms = self.model.ms_discriminator(true, fake)
 
         loss_feature = self.model.feature_loss(true_fs_mp, fake_fs_mp) + self.model.feature_loss(true_fs_ms, fake_fs_ms)
         loss_gen = self.model.generator_loss(fake_out_mp) + self.model.generator_loss(fake_out_ms)
         total_gen_loss = loss_mel * 45 + loss_feature * 2 + loss_gen
-
+        """
         if is_train:
-            total_gen_loss.backward()
+            loss_mel.backward()
             self.optimizer_g.step()
         
-
+        """
         batch.update({'audio_wave': fake, 
                 'd_loss': 0, 
                 'mel_loss': loss_mel * 45,
@@ -188,8 +188,9 @@ class GanTrainer(BaseTrainer):
                 'gen_loss': loss_gen,
                 'total_gen_loss': total_gen_loss})
         """
+
         batch.update({'audio_wave': fake, 
-                'd_loss': d_loss})
+                'mel_loss': loss_mel})
         
         if is_train:
             if self.lr_scheduler_g is not None:
@@ -204,8 +205,8 @@ class GanTrainer(BaseTrainer):
                 else:
                     self.lr_scheduler_d.step()
 
-        metrics.update("discriminator loss", batch["d_loss"].item())
-        #metrics.update("mel loss", batch["mel_loss"].item())
+        #metrics.update("discriminator loss", batch["d_loss"].item())
+        metrics.update("mel loss", batch["mel_loss"].item())
         #metrics.update("feature loss", batch["feature_loss"].item())
         #metrics.update("adversarial loss", batch["gen_loss"].item())
         #metrics.update("total generator loss", batch["total_gen_loss"].item())
