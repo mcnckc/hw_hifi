@@ -9,6 +9,6 @@ class GeneratorLoss(nn.Module):
         loss = 0
         for out in disc_outs:
             loss += torch.mean((1 - out) ** 2)
-            print("DISCR OUTS SHAPE:", out)
+            print("DISCR OUTS SHAPE:", out.shape)
         return loss
 
