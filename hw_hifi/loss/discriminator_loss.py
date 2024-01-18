@@ -7,6 +7,6 @@ class DiscriminatorLoss(nn.Module):
                 **batch) -> Tensor:
         loss = 0
         for t_out, f_out in zip(true_outs, fake_outs):
-            loss += torch.mean((1 - t_out) ** 2) + torch.mean(f_out ** 2)
+            loss += torch.mean((1 - t_out) ** 2) #+ torch.mean(f_out ** 2)
         return loss
 
