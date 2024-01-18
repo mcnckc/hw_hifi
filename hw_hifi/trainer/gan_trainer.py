@@ -168,29 +168,25 @@ class GanTrainer(BaseTrainer):
             self.optimizer_g.zero_grad()
         
         loss_mel = F.l1_loss(batch['spectrogram'], fake_spec) * 45
-        """"
+        
         true_out_mp, fake_out_mp, true_fs_mp, fake_fs_mp = self.model.mp_discriminator(true, fake)
         true_out_ms, fake_out_ms, true_fs_ms, fake_fs_ms = self.model.ms_discriminator(true, fake)
 
         loss_feature = self.model.feature_loss(true_fs_mp, fake_fs_mp) + self.model.feature_loss(true_fs_ms, fake_fs_ms)
         loss_gen = self.model.generator_loss(fake_out_mp) + self.model.generator_loss(fake_out_ms)
         total_gen_loss = loss_mel * 45 + loss_feature * 2 + loss_gen
-        """
+        
         if is_train:
             loss_mel.backward()
             self.optimizer_g.step()
         
-        """
+        
         batch.update({'audio_wave': fake, 
                 'd_loss': 0, 
                 'mel_loss': loss_mel * 45,
                 'feature_loss': loss_feature * 2,
                 'gen_loss': loss_gen,
                 'total_gen_loss': total_gen_loss})
-        """
-
-        batch.update({'audio_wave': fake, 
-                'mel_loss': loss_mel})
         
         if is_train:
             if self.lr_scheduler_g is not None:
@@ -207,9 +203,9 @@ class GanTrainer(BaseTrainer):
 
         #metrics.update("discriminator loss", batch["d_loss"].item())
         metrics.update("mel loss", batch["mel_loss"].item())
-        #metrics.update("feature loss", batch["feature_loss"].item())
-        #metrics.update("adversarial loss", batch["gen_loss"].item())
-        #metrics.update("total generator loss", batch["total_gen_loss"].item())
+        metrics.update("feature loss", batch["feature_loss"].item())
+        metrics.update("adversarial loss", batch["gen_loss"].item())
+        metrics.update("total generator loss", batch["total_gen_loss"].item())
         for met in self.metrics:
             metrics.update(met.name, met(**batch))
         return batch
