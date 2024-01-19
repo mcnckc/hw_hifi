@@ -138,7 +138,19 @@ class GanTrainer(BaseTrainer):
                 # because we are interested in recent train metrics
                 last_train_metrics = self.train_metrics.result()
                 self.train_metrics.reset()
-        
+                
+        if self.lr_scheduler_g is not None:
+            if isinstance(self.lr_scheduler_g, ReduceLROnPlateau):
+                self.lr_scheduler_g.step(batch['loss'].item())
+            else:
+                self.lr_scheduler_g.step()
+            
+        if self.lr_scheduler_d is not None:
+            if isinstance(self.lr_scheduler_d, ReduceLROnPlateau):
+                self.lr_scheduler_d.step(batch['loss'].item())
+            else:
+                self.lr_scheduler_d.step()
+
         log = last_train_metrics
 
         for part, dataloader in self.evaluation_dataloaders.items():
@@ -188,18 +200,6 @@ class GanTrainer(BaseTrainer):
                 'gen_loss': loss_gen,
                 'total_gen_loss': total_gen_loss})
         
-        if is_train:
-            if self.lr_scheduler_g is not None:
-                if isinstance(self.lr_scheduler_g, ReduceLROnPlateau):
-                    self.lr_scheduler_g.step(batch['loss'].item())
-                else:
-                    self.lr_scheduler_g.step()
-            
-            if self.lr_scheduler_d is not None:
-                if isinstance(self.lr_scheduler_d, ReduceLROnPlateau):
-                    self.lr_scheduler_d.step(batch['loss'].item())
-                else:
-                    self.lr_scheduler_d.step()
 
         metrics.update("discriminator loss", batch["d_loss"].item())
         metrics.update("mel loss", batch["mel_loss"].item())
