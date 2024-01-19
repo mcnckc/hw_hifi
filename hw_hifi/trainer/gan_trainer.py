@@ -138,7 +138,7 @@ class GanTrainer(BaseTrainer):
                 # because we are interested in recent train metrics
                 last_train_metrics = self.train_metrics.result()
                 self.train_metrics.reset()
-                
+
         if self.lr_scheduler_g is not None:
             if isinstance(self.lr_scheduler_g, ReduceLROnPlateau):
                 self.lr_scheduler_g.step(batch['loss'].item())
@@ -189,16 +189,16 @@ class GanTrainer(BaseTrainer):
         total_gen_loss = loss_mel * 45 + loss_feature * 2 + loss_gen
         
         if is_train:
-            loss_mel.backward()
+            total_gen_loss.backward()
             self.optimizer_g.step()
         
         
-        batch.update({'audio_wave': fake, 
-                'd_loss': d_loss, 
-                'mel_loss': loss_mel * 45,
-                'feature_loss': loss_feature * 2,
-                'gen_loss': loss_gen,
-                'total_gen_loss': total_gen_loss})
+        batch.update({'audio_wave': fake.detach(), 
+                'd_loss': d_loss.detach(), 
+                'mel_loss': loss_mel.detach() * 45,
+                'feature_loss': loss_feature.detach() * 2,
+                'gen_loss': loss_gen.detach(),
+                'total_gen_loss': total_gen_loss.detach()})
         
 
         metrics.update("discriminator loss", batch["d_loss"].item())
