@@ -166,6 +166,7 @@ class GanTrainer(BaseTrainer):
 
         true = batch['audio_wave'].unsqueeze(dim=1)
         fake = self.model.generator(batch['spectrogram'])
+        print('AUDIO SHAPES:', "TRUE:", true.shape, "FAKE:", fake.shape)
         fake_spec = self.model.mel(fake)
         
         true_out_mp, fake_out_mp, _, _ = self.model.mp_discriminator(true, fake.detach())
