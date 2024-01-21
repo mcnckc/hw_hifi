@@ -166,10 +166,9 @@ class GanTrainer(BaseTrainer):
         true = batch['audio_wave'].unsqueeze(dim=1)
         true_spec = self.model.mel(true)
         fake = self.model.generator(true_spec.squeeze(1))
-        fake_wla = self.model.wla_generator(true_spec.squeeze(1))
-        print('AUDIO SHAPES:', "TRUE:", true.shape, "FAKE:", fake.shape, "FAKE WLA:", fake_wla['wave_fake'].shape)
+        #print('AUDIO SHAPES:', "TRUE:", true.shape, "FAKE:", fake.shape, "FAKE WLA:", fake_wla['wave_fake'].shape)
         fake_spec = self.model.mel(fake)
-        print('SPEC SHAPES:', 'BATCH:', true_spec.shape, 'FAKE:', fake_spec.shape, 'FAKE WLA:', fake_wla['mel_fake'].shape)
+        #print('SPEC SHAPES:', 'BATCH:', true_spec.shape, 'FAKE:', fake_spec.shape, 'FAKE WLA:', fake_wla['mel_fake'].shape)
         true_out_mp, fake_out_mp, _, _ = self.model.mp_discriminator(true, fake.detach())
         true_out_ms, fake_out_ms, _, _ = self.model.ms_discriminator(true, fake.detach())
 

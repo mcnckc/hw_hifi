@@ -19,7 +19,6 @@ class HiFiGAN(BaseModel):
     def __init__(self, init_channels, kernel_sizes, strides, res_kernels, res_dilations, **batch):
         super().__init__(**batch)
         self.generator = Generator(init_channels, kernel_sizes, strides, res_kernels, res_dilations)
-        self.wla_generator = WLAGenerator(res_kernels, res_dilations, init_channels, strides, kernel_sizes)
         self.mp_discriminator = MPDiscriminator()
         self.ms_discriminator = MSDiscriminator()
         self.mel = MelSpectrogram()
