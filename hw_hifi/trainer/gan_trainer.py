@@ -12,7 +12,6 @@ from tqdm import tqdm
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 
 from hw_hifi.base import BaseTrainer
-from hw_hifi.base.base_text_encoder import BaseTextEncoder
 from hw_hifi.logger.utils import plot_spectrogram_to_buf
 from hw_hifi.utils import inf_loop, MetricTracker
 from hw_hifi.utils import ROOT_PATH
