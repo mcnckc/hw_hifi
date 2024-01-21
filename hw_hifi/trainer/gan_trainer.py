@@ -73,7 +73,7 @@ class GanTrainer(BaseTrainer):
         """
         Move all necessary tensors to the HPU
         """
-        for tensor_for_gpu in ["spectrogram", "audio_wave"]:
+        for tensor_for_gpu in ["audio_wave"]:
             batch[tensor_for_gpu] = batch[tensor_for_gpu].to(device)
         return batch
 
