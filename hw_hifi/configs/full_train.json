@@ -9,7 +9,7 @@
       "spectrogram": []
     },
     "arch": {
-      "type": "TrueHiFiGAN",
+      "type": "HiFiGAN",
       "args": {
         "init_channels": 512,
         "kernel_sizes": [16,16,4,4],
@@ -90,7 +90,7 @@
       "save_dir": "saved/",
       "save_period": 10,
       "verbosity": 2,
-      "monitor": "min val_loss",
+      "monitor": "min total_gen_loss",
       "early_stop": 3000,
       "visualize": "wandb",
       "wandb_project": "hifi_project",

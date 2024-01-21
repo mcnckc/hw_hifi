@@ -39,7 +39,8 @@ class LJspeechDataset(BaseDataset):
     def _load_dataset(self):
 
         files = [file_name for file_name in (self._data_dir / "wavs").iterdir()]
-        train_length = int(0.85 * len(files)) # hand split, test ~ 15% 
+        #train_length = int(0.85 * len(files)) # hand split, test ~ 15% 
+        train_length = len(files) - 128
         (self._splits_dir / "train").mkdir(exist_ok=True, parents=True)
         (self._splits_dir / "test").mkdir(exist_ok=True, parents=True)
         for i, fpath in enumerate((self._data_dir / "wavs").iterdir()):

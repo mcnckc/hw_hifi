@@ -15,7 +15,8 @@ from hw_hifi.base import BaseTrainer
 from hw_hifi.base.base_text_encoder import BaseTextEncoder
 from hw_hifi.logger.utils import plot_spectrogram_to_buf
 from hw_hifi.utils import inf_loop, MetricTracker
-
+from hw_hifi.utils import ROOT_PATH
+import torchaudio
 
 class GanTrainer(BaseTrainer):
     """
@@ -56,13 +57,13 @@ class GanTrainer(BaseTrainer):
         self.log_step = 10
 
         self.train_metrics = MetricTracker(
-            "loss", "grad norm", "discriminator loss", "mel loss",
+            "grad norm", "discriminator loss", "mel loss",
             "feature loss",
             "adversarial loss",
             "total generator loss", *[m.name for m in self.metrics], writer=self.writer
         )
         self.evaluation_metrics = MetricTracker(
-            "loss", "discriminator loss", "mel loss",
+            "discriminator loss", "mel loss",
             "feature loss",
             "adversarial loss",
             "total generator loss", *[m.name for m in self.metrics], writer=self.writer
@@ -157,6 +158,8 @@ class GanTrainer(BaseTrainer):
             val_log = self._evaluation_epoch(epoch, part, dataloader)
             log.update(**{f"{part}_{name}": value for name, value in val_log.items()})
 
+        self._log_test_audios()
+
         return log
 
     def process_batch(self, batch, is_train: bool, metrics: MetricTracker):
@@ -238,6 +241,25 @@ class GanTrainer(BaseTrainer):
         for name, p in self.model.named_parameters():
             self.writer.add_histogram(name, p, bins="auto")
         return self.evaluation_metrics.result()
+    
+    def _log_test_audios(self):
+        self.model.eval()
+        test_dir = ROOT_PATH / 'test_audio'
+        with torch.no_grad():
+            for audio_file in test_dir.iterdir():
+                audio_tensor, sr = torchaudio.load(audio_file)
+                target_sr = self.config["preprocessing"]["sr"]
+                if sr != target_sr:
+                    print("Sample rate mismatch!")
+                    audio_tensor = torchaudio.functional.resample(audio_tensor, sr, target_sr)
+                audio_tensor = audio_tensor.to(self.device)
+                spectrogram = self.model.mel(audio_tensor)
+                fake = self.model.generator(spectrogram).squeeze(0).cpu()
+                self.writer.add_audio(
+                    audio_file.stem + " generated",
+                    fake,
+                    sample_rate=22050,
+                )
 
     def _progress(self, batch_idx):
         base = "[{}/{} ({:.0f}%)]"
