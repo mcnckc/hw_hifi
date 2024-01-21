@@ -243,7 +243,7 @@ class GanTrainer(BaseTrainer):
     
     def _log_test_audios(self):
         self.model.eval()
-        test_dir = ROOT_PATH / 'test_audio'
+        test_dir = ROOT_PATH / 'test_audios'
         with torch.no_grad():
             for audio_file in test_dir.iterdir():
                 audio_tensor, sr = torchaudio.load(audio_file)
