@@ -1,12 +1,12 @@
 from dataclasses import dataclass
-
 import torch
 from torch import nn
 
 import torchaudio
 
-import librosa  
+import librosa
 
+#WLA
 
 @dataclass
 class MelSpectrogramConfig:
@@ -18,14 +18,14 @@ class MelSpectrogramConfig:
     f_max: int = 8000
     n_mels: int = 80
     power: float = 1.0
-
-    # value of melspectrograms if we fed a silence into `MelSpectrogram`
     pad_value: float = -11.5129251
 
 
 class MelSpectrogram(nn.Module):
-
-    def __init__(self, config: MelSpectrogramConfig = MelSpectrogramConfig()):
+    def __init__(
+        self,
+        config: MelSpectrogramConfig,
+    ):
         super(MelSpectrogram, self).__init__()
 
         self.config = config
@@ -43,17 +43,17 @@ class MelSpectrogram(nn.Module):
             pad=(config.win_length - config.hop_length) // 2,
         )
 
-        # The is no way to set power in constructor in 0.5.0 version.
-        self.mel_spectrogram.spectrogram.power = config.power
+        # The ииis no way to set power in constructor in 0.5.0 version.
+        # self.mel_spectrogram.spectrogram.power = config.power
 
-        # Default `torchaudio` mel basis uses HTK formula. In order to be compatible with WaveGlow
+        # Default `torchaudio` mel_true basis uses HTK formula. In order to be compatible with WaveGlow
         # we decided to use Slaney one instead (as well as `librosa` does by default).
         mel_basis = librosa.filters.mel(
             sr=config.sr,
             n_fft=config.n_fft,
             n_mels=config.n_mels,
             fmin=config.f_min,
-            fmax=config.f_max
+            fmax=config.f_max,
         ).T
         self.mel_spectrogram.mel_scale.fb.copy_(torch.tensor(mel_basis))
 
@@ -62,9 +62,4 @@ class MelSpectrogram(nn.Module):
         :param audio: Expected shape is [B, T]
         :return: Shape is [B, n_mels, T']
         """
-
-        mel = self.mel_spectrogram(audio) \
-            .clamp_(min=1e-5) \
-            .log_()
-
-        return mel
+        return self.mel_spectrogram(audio).clamp_(min=1e-5).log_()

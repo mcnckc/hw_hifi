@@ -206,7 +206,7 @@ class Trainer(BaseTrainer):
     ):
         batch = self.move_batch_to_device(batch, self.device)
         with torch.no_grad():
-            print("WAVE:", batch['waves'].shape)
+            print("WAVE:", batch['wave_true'].shape)
             batch.update(self.model(**batch))
             print("MEL TRUE:", batch["mel_true"].shape)
         with optional_autocast(enabled=self.mixed_precision):
