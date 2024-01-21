@@ -206,13 +206,13 @@ class Trainer(BaseTrainer):
     ):
         batch = self.move_batch_to_device(batch, self.device)
         with torch.no_grad():
-            print("WAVE:", batch['wave_true'].shape)
+            #print("WAVE:", batch['wave_true'].shape)
             batch.update(self.model(**batch))
-            print("MEL TRUE:", batch["mel_true"].shape)
+            #print("MEL TRUE:", batch["mel_true"].shape)
         with optional_autocast(enabled=self.mixed_precision):
             batch.update(self.model.generator(**batch))
-            print("FAKE:", batch["wave_fake"].shape)
-            print("FAKE MEL:", batch["mel_fake"].shape)
+            #print("FAKE:", batch["wave_fake"].shape)
+            #print("FAKE MEL:", batch["mel_fake"].shape)
             # Discriminator
             self.optimizer_discriminator.zero_grad(set_to_none=True)
 

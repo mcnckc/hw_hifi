@@ -9,7 +9,7 @@
       "spectrogram": []
     },
     "arch": {
-      "type": "HiFiGAN",
+      "type": "TrueHiFiGAN",
       "args": {
         "init_channels": 512,
         "kernel_sizes": [16,16,4,4],
