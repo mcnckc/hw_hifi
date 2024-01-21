@@ -20,7 +20,7 @@
     },
     "data": {
       "train": {
-        "batch_size": 16,
+        "batch_size": 8,
         "num_workers": 2,
         "datasets": [
           {
@@ -29,7 +29,7 @@
               "part": "train",
               "data_dir": "/kaggle/input/the-lj-speech-dataset/LJSpeech-1.1",
               "kaggle": "True",
-              "segment_length": 16384,
+              "segment_length": 22528,
               "max_audio_length": 20.0,
               "max_text_length": 200
             }
@@ -37,7 +37,7 @@
         ]
       },
       "val": {
-        "batch_size": 16,
+        "batch_size": 8,
         "num_workers": 2,
         "datasets": [
           {
@@ -46,7 +46,7 @@
               "part": "test",
               "data_dir": "/kaggle/input/the-lj-speech-dataset/LJSpeech-1.1",
               "kaggle": "True",
-              "segment_length": 16384,
+              "segment_length": 22528,
               "max_audio_length": 20.0,
               "max_text_length": 200,
               "limit": 128
