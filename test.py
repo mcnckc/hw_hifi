@@ -54,8 +54,9 @@ def main(config, out_file):
             audio_tensor = audio_tensor.to(device)
             spectrogram = wave2spec(audio_tensor)
             fake = model.generator(spectrogram).squeeze(0).cpu()
-            print("Shape", fake.shape)
             torchaudio.save(gen_dir / (audio_file.stem + '_generated.wav'), fake, sample_rate=target_sr, format='wav')
+
+        print("Generated audios saved in generated_audios")
 
 
 if __name__ == "__main__":
