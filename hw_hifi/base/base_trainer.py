@@ -125,7 +125,7 @@ class BaseTrainer:
                         "Training stops.".format(self.early_stop)
                     )
                     break
-
+            best = True
             if epoch % self.save_period == 0 or best:
                 self._save_checkpoint(epoch, save_best=best, only_best=True)
 
