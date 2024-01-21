@@ -41,7 +41,8 @@ def main(config, out_file):
     model.eval()
 
     results = []
-    test_dir = ROOT_PATH / 'test_audio'
+    test_dir = ROOT_PATH / 'test_audios'
+    gen_dir = ROOT_PATH / 'generated_audios'
     wave2spec = MelSpectrogram().to(device)
     with torch.no_grad():
         for audio_file in test_dir.iterdir():
@@ -54,7 +55,7 @@ def main(config, out_file):
             spectrogram = wave2spec(audio_tensor)
             fake = model.generator(spectrogram).squeeze(0).cpu()
             print("Shape", fake.shape)
-            torchaudio.save(test_dir / (audio_file.stem + '_generated.wav'), fake, sample_rate=target_sr, format='wav')
+            torchaudio.save(gen_dir / (audio_file.stem + '_generated.wav'), fake, sample_rate=target_sr, format='wav')
 
 
 if __name__ == "__main__":
