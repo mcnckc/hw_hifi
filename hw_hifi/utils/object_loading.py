@@ -2,10 +2,8 @@ from operator import xor
 
 from torch.utils.data import ConcatDataset, DataLoader
 
-import hw_hifi.augmentations
 import hw_hifi.datasets
 from hw_hifi import batch_sampler as batch_sampler_module
-from hw_hifi.base.base_text_encoder import BaseTextEncoder
 from hw_hifi.collate_fn.collate import collate_fn
 from hw_hifi.utils.parse_config import ConfigParser
 
@@ -17,7 +15,8 @@ def get_dataloaders(configs: ConfigParser):
 
         # set train augmentations
         if split == 'train':
-            wave_augs, spec_augs = hw_hifi.augmentations.from_configs(configs)
+            #wave_augs, spec_augs = hw_hifi.augmentations.from_configs(configs)
+            wave_augs, spec_augs = None, None
             drop_last = True
         else:
             wave_augs, spec_augs = None, None
