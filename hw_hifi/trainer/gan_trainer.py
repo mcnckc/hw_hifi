@@ -163,7 +163,7 @@ class GanTrainer(BaseTrainer):
         batch = self.move_batch_to_device(batch, self.device)
         if is_train:
             self.optimizer_d.zero_grad()
-
+        print("UPDATED")
         true = batch['audio_wave'].unsqueeze(dim=1)
         fake = self.model.generator(batch['spectrogram'])
         fake_wla = self.model.wla_generator(batch['spectrogram'])['wave_fake']
