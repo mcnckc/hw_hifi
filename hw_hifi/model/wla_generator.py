@@ -134,8 +134,4 @@ class WLAGenerator(torch.nn.Module):
 
     def forward(self, mel_true, **batch):
         wave_fake = self.net(mel_true.squeeze(1))
-        return {
-            "wave_fake": wave_fake,
-            "wave_fake_detached": wave_fake.detach(),
-            "mel_fake": self.mel(wave_fake.squeeze(1)),
-        }
+        return wave_fake
