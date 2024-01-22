@@ -21,7 +21,7 @@ class ResBlock(nn.Module):
             self.layers.append(block)
 
     def forward(self, x):
-        return sum([layer(x) for layer in self.layers])
+        return x + sum([layer(x) for layer in self.layers])
     
 
 class MRF(nn.Module):
