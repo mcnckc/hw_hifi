@@ -173,8 +173,6 @@ class GanTrainer(BaseTrainer):
         #print('SPEC SHAPES:', 'BATCH:', true_spec.shape, 'FAKE:', fake_spec.shape, 'FAKE WLA:', fake_wla['mel_fake'].shape)
         true_out_mp, fake_out_mp, _, _ = self.model.mp_discriminator(true, fake.detach())
         true_out_ms, fake_out_ms, _, _ = self.model.ms_discriminator(true, fake.detach())
-        print("AUDIO SHAPES:",  "TRUE SHAPE:", true.shape, "FAKE:", fake.shape)
-        #print("FEATURE SHAPES:")
         d_loss = self.model.discr_loss(true_out_mp, fake_out_mp) + self.model.discr_loss(true_out_ms, fake_out_ms)
         if is_train:
             d_loss.backward()
