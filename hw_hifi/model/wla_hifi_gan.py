@@ -32,6 +32,7 @@ class WLAHiFiGAN(BaseModel):
         self.discr_loss = DiscriminatorLoss()
         self.feature_loss = FeatureLoss()
         self.generator_loss = GeneratorLoss()
+        print("USING WLA MODEL")
 
     def generator_params(self):
         return filter(lambda p: p.requires_grad, self.generator.parameters())
