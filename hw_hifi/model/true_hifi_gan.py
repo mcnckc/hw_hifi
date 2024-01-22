@@ -40,6 +40,12 @@ class TrueHiFiGAN(BaseModel):
         return list(filter(lambda p: p.requires_grad, self.mp_discriminator.parameters())) + \
                 list(filter(lambda p: p.requires_grad, self.ms_discriminator.parameters()))
     
+    def num_params(self):
+        print("MP d params:", sum(p.numel() for p in self.mp_discriminator.parameters() if p.requires_grad))
+        print("MS d params", sum(p.numel() for p in self.ms_discriminator.parameters() if p.requires_grad))
+        print("Generator params:", sum(p.numel() for p in self.generator.parameters() if p.requires_grad))
+        print("HiFiGAN params:", sum(p.numel() for p in self.parameters() if p.requires_grad))
+
     def forward(self, **batch) -> Tensor | dict:
         return batch
 

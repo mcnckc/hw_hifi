@@ -15,11 +15,18 @@ class PDiscriminator(nn.Module):
         channels = [1, 32, 128, 512, 1024, 1024]
         n_layers = len(channels) - 1
         for i in range(n_layers):
-            self.layers.append(nn.Sequential(
-                norm_f(nn.Conv2d(channels[i], channels[i + 1], (ks, 1),
-                                  (stride, 1), padding=(get_padding(ks, 1), 0))),
-                nn.LeakyReLU(0.1)
-            ))
+            if i < n_layers - 1:
+                self.layers.append(nn.Sequential(
+                    norm_f(nn.Conv2d(channels[i], channels[i + 1], (ks, 1),
+                                    (stride, 1), padding=(get_padding(ks, 1), 0))),
+                    nn.LeakyReLU(0.1)
+                ))
+            else:
+                self.layers.append(nn.Sequential(
+                    norm_f(nn.Conv2d(channels[i], channels[i + 1], (ks, 1),
+                                    1, padding=(2, 0))),
+                    nn.LeakyReLU(0.1)
+                ))
         self.layers.append(norm_f(nn.Conv2d(1024, 1, (3, 1), 1, padding=(1, 0))))
 
     def reshape_audio(self, x):
