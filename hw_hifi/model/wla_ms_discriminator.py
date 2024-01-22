@@ -70,11 +70,11 @@ class WLAMultiScaleDiscriminator(BaseDiscriminator):
         )
         self.pooling = AvgPool1d(4, 2, padding=2)
 
-    def forward(self, **batch):
+    def forward(self, true, fake):
         (
             ms_outputs_true,
             ms_outputs_fake,
             ms_features_true,
             ms_features_fake,
-        ) = super().forward(**batch)
+        ) = super().forward(true, fake)
         return ms_outputs_true, ms_outputs_fake, ms_features_true, ms_features_fake,

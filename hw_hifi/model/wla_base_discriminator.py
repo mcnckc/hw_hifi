@@ -7,8 +7,8 @@ class BaseDiscriminator(nn.Module):
         self.sub_discriminators = nn.ModuleList()
         self.pooling = nn.Identity()
 
-    def forward(self, wave_true, wave_fake_detached, wave_fake, detach=True, **kwargs):
-        wave_fake_consistent = wave_fake_detached if detach else wave_fake
+    def forward(self, wave_true, wave_fake, **kwargs):
+        wave_fake_consistent = wave_fake
         true_outputs, fake_outputs, true_features, fake_features = [], [], [], []
 
         for sub_discriminator in self.sub_discriminators:

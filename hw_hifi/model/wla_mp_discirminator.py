@@ -70,12 +70,12 @@ class WLAMultiPeriodDiscriminator(BaseDiscriminator):
             [PeriodDiscriminator(period, channels_list) for period in period_list]
         )
 
-    def forward(self, **batch):
+    def forward(self, true, fake):
         (
             mp_outputs_true,
             mp_outputs_fake,
             mp_features_true,
             mp_features_fake,
-        ) = super().forward(**batch)
+        ) = super().forward(true, fake)
         return mp_outputs_true, mp_outputs_fake, mp_features_true, mp_features_fake
     
