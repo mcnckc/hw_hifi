@@ -11,10 +11,6 @@ from hw_hifi.loss.discriminator_loss import DiscriminatorLoss
 from hw_hifi.loss.feature_loss import FeatureLoss
 from hw_hifi.loss.generator_loss import GeneratorLoss
 
-from hw_hifi.model.wla_generator import WLAGenerator
-
-import torch.nn.functional as F
-
 class HiFiGAN(BaseModel):
     def __init__(self, init_channels, kernel_sizes, strides, res_kernels, res_dilations, use_spectral_norm=False, **batch):
         super().__init__(**batch)

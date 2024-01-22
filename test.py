@@ -8,7 +8,6 @@ from tqdm import tqdm
 
 import hw_hifi.model as module_model
 from hw_hifi.utils import ROOT_PATH
-from hw_hifi.utils.object_loading import get_dataloaders
 from hw_hifi.utils.parse_config import ConfigParser
 import torchaudio
 from hw_hifi.utils.mel import MelSpectrogram
@@ -40,7 +39,6 @@ def main(config, out_file):
     model = model.to(device)
     model.eval()
 
-    results = []
     test_dir = ROOT_PATH / 'test_audios'
     gen_dir = ROOT_PATH / 'generated_audios'
     wave2spec = MelSpectrogram().to(device)
