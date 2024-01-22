@@ -46,10 +46,10 @@ class PDiscriminator(nn.Module):
         return x.flatten(1, -1), features
 
 class MPDiscriminator(nn.Module):
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, use_spectral_norm, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.discriminators = nn.ModuleList([
-            PDiscriminator(p) for p in [2, 3, 5, 7, 11]
+            PDiscriminator(p, use_spectral_norm=use_spectral_norm) for p in [2, 3, 5, 7, 11]
         ])
     def forward(self, true, fake):
         #print("wave shapes:", true.shape, fake.shape)

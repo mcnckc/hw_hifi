@@ -16,7 +16,7 @@ from hw_hifi.model.wla_generator import WLAGenerator
 import torch.nn.functional as F
 
 class HiFiGAN(BaseModel):
-    def __init__(self, init_channels, kernel_sizes, strides, res_kernels, res_dilations, **batch):
+    def __init__(self, init_channels, kernel_sizes, strides, res_kernels, res_dilations, use_spectral_norm=False, **batch):
         super().__init__(**batch)
         self.generator = Generator(init_channels, kernel_sizes, strides, res_kernels, res_dilations)
         self.mp_discriminator = MPDiscriminator()
