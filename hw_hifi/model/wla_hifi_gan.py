@@ -27,7 +27,11 @@ class WLAHiFiGAN(BaseModel):
         super().__init__(**batch)
         self.generator = WLAGenerator(res_kernels, res_dilations, init_channels, strides, kernel_sizes)
         self.mp_discriminator = WLAMultiPeriodDiscriminator([2, 3, 5, 7, 11], [1, 32, 128, 512, 1024, 1024])
-        self.ms_discriminator = WLAMultiScaleDiscriminator()
+        self.ms_discriminator = WLAMultiScaleDiscriminator(
+            ms_channels_list=[128, 128, 256, 512, 1024, 1024, 1024],
+            ms_kernels_list=[15, 41, 41, 41, 41, 41, 5],
+            ms_strides_list=[1, 2, 2, 4, 4, 1, 1],
+            ms_groups_list=[1, 4, 16, 16, 16, 16, 2])
         self.mel = MelSpectrogram()
         self.discr_loss = DiscriminatorLoss()
         self.feature_loss = FeatureLoss()
