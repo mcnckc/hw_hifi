@@ -80,7 +80,10 @@ class GanTrainer(BaseTrainer):
     def _clip_grad_norm(self):
         if self.config["trainer"].get("grad_norm_clip", None) is not None:
             clip_grad_norm_(
-                self.model.parameters(), self.config["trainer"]["grad_norm_clip"]
+                self.model.generator_params(), self.config["trainer"]["grad_norm_clip"]
+            )
+            clip_grad_norm_(
+                self.model.discriminator_params(), self.config["trainer"]["grad_norm_clip"]
             )
 
     def _train_epoch(self, epoch):
@@ -176,6 +179,7 @@ class GanTrainer(BaseTrainer):
         d_loss = self.model.discr_loss(true_out_mp, fake_out_mp) + self.model.discr_loss(true_out_ms, fake_out_ms)
         if is_train:
             d_loss.backward()
+            #self._clip_grad_norm()
             self.optimizer_d.step()
         
         if is_train:
@@ -192,6 +196,7 @@ class GanTrainer(BaseTrainer):
         
         if is_train:
             total_gen_loss.backward()
+            #self._clip_grad_norm()
             self.optimizer_g.step()
         
         
